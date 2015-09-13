@@ -20,16 +20,16 @@ import java.net.URL;
 /**
  * Created by Samuel on 15-09-10.
  */
-public class FetchMovie extends AsyncTask<String,Void,Movies[]> {
+public class  FetchMovie extends AsyncTask<String,Void,Movies[]> {
+    ImageAdapter imageAdapter;
 
-    /*private static FetchMovie fetchMovie = null;
-
-    public static FetchMovie getInstanceFetchMovie()
+    // create another constructor with imageview to notify imageView when preference changes
+    public FetchMovie(ImageAdapter adapter)
     {
-        if (fetchMovie == null)
-            fetchMovie = new FetchMovie();
-        return fetchMovie;
-    }*/
+        imageAdapter = adapter;
+    }
+
+
 
     public Movies[] getDataFromAPI(String jsonString, String preference) throws JSONException {
         int num;
@@ -162,6 +162,7 @@ public class FetchMovie extends AsyncTask<String,Void,Movies[]> {
             for (Movies s : strings)
                 ImageAdapter.movie_list.add(s);
         }
+        imageAdapter.notifyDataSetChanged();
         this.cancel(true);
 
     }

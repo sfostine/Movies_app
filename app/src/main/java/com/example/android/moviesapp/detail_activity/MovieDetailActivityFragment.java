@@ -3,6 +3,7 @@ package com.example.android.moviesapp.detail_activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +47,12 @@ public class MovieDetailActivityFragment extends Fragment {
 
         //set the value of the views
         movie_title.setText(movie.getTitle());
-        date_textview.setText(movie.getDate());
-        rate_textview.setText(movie.getAverage_count() + "/10");
+        date_textview.setText("Release date\n" + movie.getDate());
+        rate_textview.setText("Rating\n" + movie.getAverage_count() + "/10");
         overview.setText(movie.getOverView());
+        overview.setMovementMethod(new ScrollingMovementMethod());
+
+
         Picasso.with(getActivity()).load(movie.getLink()).into(detail_image);
 
         return rootView;

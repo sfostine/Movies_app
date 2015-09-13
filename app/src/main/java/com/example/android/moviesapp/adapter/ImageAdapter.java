@@ -54,12 +54,10 @@ public class ImageAdapter extends BaseAdapter{
             imageView = (ImageView) convertView;
 
         // using picasso to load images
-
             Picasso.with(context).load(movie_list.get(position).getLink()).into(imageView);
         //return view;
         return imageView;
     }
-
 }
 
 

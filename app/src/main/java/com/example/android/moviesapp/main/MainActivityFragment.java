@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -48,7 +47,7 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
     public void setPreference()
     {
         // Fetching the movie
-        FetchMovie movie = new FetchMovie();
+        FetchMovie movie = new FetchMovie(adapter);
 
         // declare a sharedPreference to get the user preference
         SharedPreferences sharedPreferences =
@@ -61,20 +60,12 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
         movie.execute(sort_preference);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        int idItem = item.getItemId();
-
-
-        return super.onOptionsItemSelected(item);
-
-    }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         setPreference();
+
     }
 
 
