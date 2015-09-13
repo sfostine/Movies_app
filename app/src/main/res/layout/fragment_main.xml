@@ -6,16 +6,17 @@
     android:id="@+id/container"
     tools:context=".MainActivityFragment">
 
-  <GridView
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:id="@+id/grid_movies_list"
-      android:stretchMode="columnWidth"
-      android:numColumns="auto_fit"
-      android:horizontalSpacing="0dp"
-      android:verticalSpacing="0dp"
-      android:gravity="center"
+    <GridView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/grid_movies_list"
+        android:stretchMode="columnWidth"
+        android:numColumns="auto_fit"
+        android:horizontalSpacing="0dp"
+        android:verticalSpacing="0dp"
+        android:gravity="center"
+        android:scrollbars="vertical"
 
-      />
+        />
 
 </FrameLayout>

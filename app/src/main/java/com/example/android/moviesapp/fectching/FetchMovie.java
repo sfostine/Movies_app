@@ -1,7 +1,10 @@
-package com.example.android.moviesapp;
+package com.example.android.moviesapp.fectching;
 
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.android.moviesapp.adapter.ImageAdapter;
+import com.example.android.moviesapp.movieInfo.Movies;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,9 +20,18 @@ import java.net.URL;
 /**
  * Created by Samuel on 15-09-10.
  */
-public class FetchMovie extends AsyncTask<Void,Void,String[]> {
+public class FetchMovie extends AsyncTask<String,Void,Movies[]> {
 
-    public String[] getDataFromAPI(String jsonString) throws JSONException {
+    /*private static FetchMovie fetchMovie = null;
+
+    public static FetchMovie getInstanceFetchMovie()
+    {
+        if (fetchMovie == null)
+            fetchMovie = new FetchMovie();
+        return fetchMovie;
+    }*/
+
+    public Movies[] getDataFromAPI(String jsonString, String preference) throws JSONException {
         int num;
 
         final String BASE_URL = "http://image.tmdb.org/t/p/w342/";
@@ -29,19 +41,51 @@ public class FetchMovie extends AsyncTask<Void,Void,String[]> {
 
         // assign the value of num
         num = jsonArray.length();
-        String [] resultsLink = new String[num];
+
+        //String [] resultsLink = new String[num];
+
+        Movies[] moviesList = new Movies[num];
+
 
         for(int i = 0; i < num; i++) {
-            resultsLink[i] = BASE_URL + jsonArray.getJSONObject(i).getString("poster_path");
-            String l = resultsLink[i];
-
+            int id = jsonArray.getJSONObject(i).getInt("id");
+            String name = jsonArray.getJSONObject(i).getString("original_title");
+            String date = jsonArray.getJSONObject(i).getString("release_date");
+            String link = BASE_URL + jsonArray.getJSONObject(i).getString("poster_path");
+            Double rate = jsonArray.getJSONObject(i).getDouble("vote_average");
+            String detail = jsonArray.getJSONObject(i).getString("overview");
+            moviesList[i] = new Movies(id,name, date, link, rate, detail);
+            //resultsLink[i] = link;
         }
-        return resultsLink;
+
+        if(preference.equals("rated"))
+            SortedByVote(moviesList);
+
+
+        return moviesList;
+    }
+
+    // sort the movie list by average_vote
+    public void SortedByVote(Movies [] list)
+    {
+
+        for(int i = 0; i < list.length; i++)
+        {
+            for (int j= 1; j < list.length; j++)
+            {
+                if(list[j-1].getAverage_count() < list[j].getAverage_count())
+                {
+                    Movies temp = list[j];
+                    list[j] = list[j-1];
+                    list[j-1] = temp;
+                }
+            }
+        }
     }
 
 
     @Override
-    protected String[] doInBackground(Void... params) {
+    protected Movies[] doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
         BufferedReader buffer = null;
         String jSonString;
@@ -102,7 +146,7 @@ public class FetchMovie extends AsyncTask<Void,Void,String[]> {
         }
 
         try {
-            return getDataFromAPI(jSonString);
+            return getDataFromAPI(jSonString, params[0]);
         } catch (JSONException e) {
             e.printStackTrace();
             Log.v("getDataFromAPI ERROR", "" + e);
@@ -111,14 +155,14 @@ public class FetchMovie extends AsyncTask<Void,Void,String[]> {
     }
 
     @Override
-    protected void onPostExecute(String[] strings) {
+    protected void onPostExecute(Movies[] strings) {
         super.onPostExecute(strings);
         if (strings != null) {
             ImageAdapter.movie_list.clear();
-            for (String s : strings)
+            for (Movies s : strings)
                 ImageAdapter.movie_list.add(s);
         }
+        this.cancel(true);
 
     }
-
 }
