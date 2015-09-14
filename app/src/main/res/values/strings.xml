@@ -5,4 +5,5 @@
     <string name="ic_launcher">Ic_launcher</string>
     <string name="title_activity_movie_detail">Movie Detail</string>
     <string name="action_refresh">Refresh</string>
+    <string name="title_activity_no_internet">Connection error</string>
 </resources>

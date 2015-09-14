@@ -1,7 +1,10 @@
-package com.example.android.moviesapp.main;
+package com.example.android.moviesapp.main_activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -11,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.example.android.moviesapp.internet_connection_error_activity.No_internetActivity;
 import com.example.android.moviesapp.R;
 import com.example.android.moviesapp.adapter.ImageAdapter;
 import com.example.android.moviesapp.detail_activity.MovieDetailActivity;
@@ -46,26 +50,39 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
 
     public void setPreference()
     {
-        // Fetching the movie
-        FetchMovie movie = new FetchMovie(adapter);
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        // declare a sharedPreference to get the user preference
-        SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Fetching the movie
+            FetchMovie movie = new FetchMovie(adapter);
 
-        // Store the user preference
-        String sort_preference = sharedPreferences.getString(getString(R.string.pref_key),
-                getString(R.string.pref_default));
+            // declare a sharedPreference to get the user preference
+            SharedPreferences sharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        movie.execute(sort_preference);
+            // Store the user preference
+            String sort_preference = sharedPreferences.getString(getString(R.string.pref_key),
+                    getString(R.string.pref_default));
+
+            movie.execute(sort_preference);
+
+        } else {
+
+            Intent intent_no_connection = new Intent(getActivity(), No_internetActivity.class);
+            startActivity(intent_no_connection);
+            return;
+
+        }
+
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        setPreference();
 
+        setPreference();
     }
 
 
@@ -80,5 +97,10 @@ public class MainActivityFragment extends Fragment implements AdapterView.OnItem
 
         // start the activity
         startActivity(intent);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 }

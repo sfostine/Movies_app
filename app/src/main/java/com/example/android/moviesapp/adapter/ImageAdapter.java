@@ -44,14 +44,15 @@ public class ImageAdapter extends BaseAdapter{
 
     @Override
     public  synchronized View getView(int position, View convertView, ViewGroup parent)  {
-        //if the view is null, inflate the view, then set the view to imageView
+       //if the view is null, inflate the view, then set the view to imageView
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.movies_item, parent, false);
+            View view = inflater.inflate(R.layout.movie_item, null, false);
             imageView = (ImageView) view.findViewById(R.id.movie_picture);
 
         } else
             imageView = (ImageView) convertView;
+
 
         // using picasso to load images
             Picasso.with(context).load(movie_list.get(position).getLink()).into(imageView);
